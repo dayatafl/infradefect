@@ -119,16 +119,16 @@ L = 0.4 * L_BCE + 0.4 * L_Dice + 0.2 * L_Boundary
 - **F1 score** per class: harmonic mean of precision and recall
 - **mIoU**: mean IoU across all 5 classes — used for early stopping and best model selection
 
-Current baseline results (Stage 2, Epoch 1, 1051 images):
+Current baseline results (Stage 2, Epoch 18, 1051 images):
 
 | Class | IoU | F1 |
 |---|---|---|
-| efflorescence | 0.3473 | 0.5155 |
-| corrosion | 0.4043 | 0.5758 |
-| crack | 0.1410 | 0.2471 |
-| spalling | 0.3278 | 0.4937 |
-| exposed_bars | 0.4163 | 0.5879 |
-| **mean** | **0.3273** | **0.4840** |
+| efflorescence | 0.3991 | 0.5705 |
+| corrosion | 0.4237 | 0.5952 |
+| crack | 0.1960 | 0.3277 |
+| spalling | 0.3814 | 0.5522 |
+| exposed_bars | 0.4323 | 0.6036 |
+| **mean** | **0.3665** | **0.5298** |
 
 Crack scores lower than other classes because thin lines (1-3px wide) are heavily penalised by IoU — even a 1px offset produces near-zero overlap. This improves substantially with more Stage 2 epochs.
 

@@ -218,7 +218,7 @@ def train(args):
         )
         print(f"[Train] Resumed at epoch {start_epoch}, best mIoU {best_miou:.4f}")
         # If resuming from Stage 2, skip Stage 1
-        if start_epoch > args.warmup_epochs:
+        if start_epoch >= args.warmup_epochs:
             skip_stage1 = True
             print(f"[Train] Skipping Stage 1 (already completed)")
 
