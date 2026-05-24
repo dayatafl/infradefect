@@ -93,6 +93,7 @@ class PredictionResponse(BaseModel):
     overlay_url:   str
     mask_url:      str
     overlay_b64:   str          # base64 PNG — lets frontend render without CORS
+    mask_b64:      str          # base64 PNG of raw class-colour mask
     class_stats:   dict         # {class_name: ClassStat}
     inference_ms:  float
     engine_mode:   str          # "model" | "demo"
@@ -417,6 +418,7 @@ async def predict(file: UploadFile = File(...)):
         overlay_url   = f"/results/{overlay_name}",
         mask_url      = f"/results/{mask_name}",
         overlay_b64   = image_to_b64(result["overlay"]),
+        mask_b64      = image_to_b64(result["mask"]),
         class_stats   = result["stats"],
         inference_ms  = inference_ms,
         engine_mode   = _engine.mode,

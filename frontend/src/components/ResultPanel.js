@@ -49,13 +49,10 @@ export default function ResultPanel({ result, error }) {
     );
   }
 
-  const { overlay_b64, class_stats, inference_ms, engine_mode, image_size, job_id } = result;
+  const { overlay_b64, mask_b64, class_stats, inference_ms, engine_mode, image_size, job_id } = result;
   const defects = Object.entries(class_stats).filter(([, s]) => s.severity !== 'none');
-  const imgSrc = `data:image/png;base64,${overlay_b64}`;
-
-  const maskUrl = result.mask_url
-    ? `http://localhost:8000${result.mask_url}`
-    : null;
+  const imgSrc  = `data:image/png;base64,${overlay_b64}`;
+  const maskSrc = mask_b64 ? `data:image/png;base64,${mask_b64}` : imgSrc;
 
   return (
     <div style={{ ...styles.wrapper, animation: 'fadeUp 0.4s ease' }}>
@@ -80,7 +77,7 @@ export default function ResultPanel({ result, error }) {
         </div>
         <div style={styles.imageWrap}>
           <img
-            src={view === 'overlay' ? imgSrc : (maskUrl || imgSrc)}
+            src={view === 'overlay' ? imgSrc : maskSrc}
             alt="result"
             style={styles.resultImg}
           />
