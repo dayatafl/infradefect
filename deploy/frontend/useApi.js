@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-const API = axios.create({ baseURL: '' }); // proxied via package.json
+// In production: REACT_APP_API_URL = your HuggingFace Spaces URL
+// In development: falls back to localhost:8000 (via package.json proxy)
+const BASE_URL = process.env.REACT_APP_API_URL || '';
+
+const API = axios.create({ baseURL: BASE_URL });
 
 export function useHealth() {
   const [status, setStatus] = useState(null);
