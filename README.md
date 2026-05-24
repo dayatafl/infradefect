@@ -37,8 +37,6 @@ claude/
 ├── results/                    # Inference overlay/mask outputs
 │
 ├── requirements.txt
-├── Makefile
-├── .env.example
 ├── README.md                   # This file
 ├── ARCHITECTURE.md             # System design + model selection rationale
 └── DECISIONS.md                # Technical decision log
@@ -210,13 +208,6 @@ Returns the class schema array used for frontend legend rendering.
 
 ## Configuration
 
-Copy .env.example to .env to override defaults without touching code:
-
-```bash
-copy .env.example .env    # Windows
-cp .env.example .env      # Linux / Mac
-```
-
 Available variables (all optional — defaults work out of the box):
 
 ```
@@ -226,18 +217,6 @@ CONF_THRESHOLD=0.45
 NUM_CLASSES=5
 UPLOAD_DIR=./uploads
 RESULT_DIR=./results
-```
-
----
-
-## Makefile Commands
-
-```bash
-make install   # pip install -r requirements.txt
-make train     # Run training from model_training/
-make eval      # Run evaluation from model_training/
-make api       # Start FastAPI server
-make clean     # Remove __pycache__ and .pyc files
 ```
 
 ---
