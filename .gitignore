@@ -51,6 +51,7 @@ results/*.png
 checkpoints/*.pth
 checkpoints/*.pt
 deploy/
+frontend/.env.production
 
 # Logs
 *.log

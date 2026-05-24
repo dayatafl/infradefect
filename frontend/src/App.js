@@ -71,7 +71,7 @@ export default function App() {
           API{' '}
           <a href="http://localhost:8000/api/docs"
             target="_blank" rel="noreferrer" style={styles.footerLink}>
-            localhost:8000
+            HuggingFace Space
           </a>
         </span>
       </footer>
