@@ -2,12 +2,10 @@
 evaluate.py — Standalone evaluation on any split with qualitative outputs
 
 Usage
------
-    python evaluate.py --data_dir ./data/codebrim --checkpoint ./checkpoints/best_model.pth
-    python evaluate.py --data_dir ./data/codebrim --checkpoint ./checkpoints/best_model.pth --save_visuals
+    python evaluate.py --checkpoint ./checkpoints/best_model.pth
+    python evaluate.py --checkpoint ./checkpoints/best_model.pth --save_visuals
 
-Produces
---------
+Key functions in evaluate.py:
   - Console: per-class IoU, F1, mIoU, mF1 results table
   - eval_results.json
   - (optional) ./visuals/ — overlay images for qualitative analysis

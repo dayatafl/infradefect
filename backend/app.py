@@ -1,19 +1,15 @@
 """
 app.py — Infrastructure Defect Segmentation API
-================================================
-This is the main application file that ties together:
+
+Key functions in app.py:
   - The trained CODEBRIM SegFormer-B2 model (from train.py)
   - FastAPI routes for upload → inference → result serving
-  - Synthetic demo fallback when no checkpoint is present
 
 The trained checkpoint (best_model.pth from train.py) should be placed at:
     ./checkpoints/best_model.pth
 
 Run locally:
     uvicorn app:app --host 0.0.0.0 --port 8000 --reload
-
-Run in Docker:
-    docker compose up
 """
 
 import os
@@ -132,7 +128,6 @@ def build_class_stats(prob_masks: np.ndarray, h: int, w: int) -> dict:
     stats = {}
     for i, name in enumerate(CLASS_NAMES):
         binary      = (prob_masks[i] >= CONF_THRESHOLD).astype(np.uint8)
-        # Morphological cleanup: remove blobs < 50px²
         n_lbl, lbl, st, _ = cv2.connectedComponentsWithStats(binary, connectivity=8)
         clean = np.zeros_like(binary)
         for j in range(1, n_lbl):
@@ -167,7 +162,6 @@ def build_overlay(original: np.ndarray, prob_masks: np.ndarray) -> np.ndarray:
     overlay = original.copy().astype(np.float32)
     for i, color in enumerate(CLASS_COLORS):
         binary = (prob_masks[i] >= CONF_THRESHOLD).astype(np.uint8)
-        # Morphological cleanup
         n_lbl, lbl, st, _ = cv2.connectedComponentsWithStats(binary, connectivity=8)
         clean = np.zeros_like(binary)
         for j in range(1, n_lbl):
@@ -205,7 +199,6 @@ class ModelEngine:
             ignore_mismatched_sizes=True,
         )
         ckpt = torch.load(checkpoint_path, map_location=self.device)
-        # Support both raw state_dict and full training checkpoint
         state = ckpt.get("model_state", ckpt)
         self.model.load_state_dict(state)
         self.model.to(self.device).eval()
@@ -236,56 +229,6 @@ class ModelEngine:
         }
 
 
-
-# ── Procedural defect drawing (demo mode only) ─────────────────────────────────
-
-def _draw_crack_probs(canvas, rng, w, h, thickness=2.5):
-    x  = float(rng.integers(w // 4, 3 * w // 4))
-    y  = float(rng.integers(h // 4, 3 * h // 4))
-    angle  = rng.uniform(0, 2 * np.pi)
-    length = rng.integers(80, min(w, h) // 2)
-    t = thickness
-    for _ in range(length):
-        angle += rng.uniform(-0.25, 0.25)
-        x += np.cos(angle) * 2
-        y += np.sin(angle) * 2
-        xi, yi = int(x), int(y)
-        r = max(1, int(t))
-        ys_g, xs_g = np.ogrid[-r:r+1, -r:r+1]
-        circle = xs_g**2 + ys_g**2 <= r**2
-        y0, y1 = max(0, yi-r), min(h, yi+r+1)
-        x0, x1 = max(0, xi-r), min(w, xi+r+1)
-        if y1 > y0 and x1 > x0:
-            cy0, cy1 = y0-(yi-r), y1-(yi-r)
-            cx0, cx1 = x0-(xi-r), x1-(xi-r)
-            canvas[y0:y1, x0:x1][circle[cy0:cy1, cx0:cx1]] = 0.9
-        t = max(1.0, t - 0.015)
-
-
-def _draw_blob_probs(canvas, rng, w, h, max_r=60):
-    cx   = int(rng.integers(max_r, w - max_r))
-    cy   = int(rng.integers(max_r, h - max_r))
-    n    = 10
-    angles = np.linspace(0, 2*np.pi, n, endpoint=False)
-    radii  = rng.uniform(max_r * 0.4, max_r, size=n)
-    ys, xs = np.mgrid[0:h, 0:w]
-    amap   = np.arctan2(ys - cy, xs - cx)
-    bins   = ((amap + np.pi) / (2*np.pi / n)).astype(int) % n
-    rdist  = np.sqrt((ys - cy)**2 + (xs - cx)**2)
-    canvas[rdist < radii[bins]] = 0.85
-
-
-def _draw_deformation_probs(canvas, rng, w, h):
-    thick = rng.integers(18, 38)
-    axis  = rng.choice(["h", "v"])
-    if axis == "h":
-        y0 = rng.integers(h//3, 2*h//3)
-        canvas[y0:y0+thick, w//5:4*w//5] = 0.8
-    else:
-        x0 = rng.integers(w//3, 2*w//3)
-        canvas[h//5:4*h//5, x0:x0+thick] = 0.8
-
-
 def _probs_to_color_mask(probs: np.ndarray, h: int, w: int) -> Image.Image:
     """Convert [4, H, W] probabilities to a coloured mask PIL image."""
     canvas = np.zeros((h, w, 3), dtype=np.uint8)
@@ -302,7 +245,7 @@ def get_engine():
         try:
             return ModelEngine(str(CHECKPOINT))
         except Exception as e:
-            logger.warning(f"Failed to load checkpoint ({e}); using demo mode.")
+            logger.warning(f"Failed to load checkpoint ({e}).")
 
 
 # ── FastAPI application ────────────────────────────────────────────────────────

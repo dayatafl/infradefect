@@ -61,3 +61,233 @@ html, body, #root {
 @keyframes progress-fill {
   from { width: 0%; }
 }
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablets and smaller screens (768px and below) */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+  }
+
+  /* Main layout - stack columns */
+  .workspace {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Header responsive */
+  .header-inner {
+    padding: 12px 16px !important;
+    gap: 12px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .header-legend {
+    width: 100%;
+    justify-content: flex-start !important;
+    order: 2;
+  }
+
+  .header-status {
+    order: 3;
+  }
+
+  .header-logo {
+    order: 1;
+  }
+
+  /* Main padding */
+  .app-main {
+    padding: 16px 12px !important;
+    gap: 16px !important;
+  }
+
+  /* Metrics bar wrapping */
+  .metrics-bar {
+    gap: 6px !important;
+  }
+
+  /* Footer responsive */
+  .app-footer {
+    padding: 12px 16px !important;
+    font-size: 9px !important;
+  }
+
+  /* Result image sizing */
+  .image-card img {
+    max-height: 300px !important;
+  }
+
+  /* Stats grid */
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile devices (640px and below) */
+@media (max-width: 640px) {
+  body, html, #root {
+    font-size: 13px;
+  }
+
+  /* Minimal padding */
+  .app-main {
+    padding: 12px 8px !important;
+  }
+
+  .header-inner {
+    padding: 10px 8px !important;
+    gap: 8px !important;
+  }
+
+  .app-footer {
+    padding: 10px 8px !important;
+    font-size: 8px !important;
+  }
+
+  /* Dropzone sizing */
+  .dropzone-area {
+    min-height: 200px !important;
+  }
+
+  /* Image sizing */
+  .image-card img {
+    max-height: 240px !important;
+  }
+
+  /* Icon sizes */
+  svg[width="48"] {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* Reduce logo text */
+  .header-logo {
+    gap: 10px !important;
+  }
+
+  .header-logo > div:first-child {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* Chips smaller */
+  .metrics-bar > div {
+    padding: 4px 8px !important;
+    font-size: 8px !important;
+  }
+
+  /* Legend items smaller */
+  .header-legend {
+    gap: 8px !important;
+  }
+
+  .header-legend > div {
+    gap: 4px !important;
+    font-size: 9px !important;
+  }
+}
+
+/* Small mobile devices (480px and below) */
+@media (max-width: 480px) {
+  body, html, #root {
+    font-size: 12px;
+  }
+
+  /* Very minimal padding */
+  .app-main {
+    padding: 8px 6px !important;
+    gap: 8px !important;
+  }
+
+  .header-inner {
+    padding: 8px 6px !important;
+    gap: 6px !important;
+  }
+
+  .app-footer {
+    padding: 8px 6px !important;
+    font-size: 7px !important;
+  }
+
+  /* Dropzone very small */
+  .dropzone-area {
+    min-height: 150px !important;
+    padding: 12px !important;
+  }
+
+  /* Very small image */
+  .image-card img {
+    max-height: 180px !important;
+  }
+
+  /* Tiny icons */
+  svg[width="28"] {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  svg[width="48"] {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  /* Instructions box sizing */
+  .instructions-box {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+  }
+
+  /* Tight metrics */
+  .metrics-bar {
+    gap: 4px !important;
+  }
+
+  .metrics-bar > div {
+    padding: 2px 6px !important;
+    font-size: 7px !important;
+  }
+}
+
+/* Landscape orientation (small height) */
+@media (max-height: 600px) and (orientation: landscape) {
+  /* Reduce vertical spacing */
+  .app-main {
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+
+  .dropzone-area {
+    min-height: 120px !important;
+  }
+
+  .image-card img {
+    max-height: 150px !important;
+  }
+
+  .metrics-bar {
+    gap: 4px !important;
+  }
+
+  .header-inner {
+    padding: 8px 12px !important;
+    gap: 8px !important;
+  }
+}
+
+/* Touch-friendly sizing */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  [role="button"] {
+    min-height: 44px; /* iOS minimum touch target */
+    min-width: 44px;
+  }
+
+  /* Larger clickable areas */
+  input[type="file"],
+  .dropzone-area {
+    min-height: 48px;
+  }
+}

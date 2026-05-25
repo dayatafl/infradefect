@@ -1,7 +1,7 @@
 """
 dataset.py — CODEBRIM multi-label segmentation dataset
 
-Key fixes and upgrades over gem/dataset.py:
+Key functions in dataset.py:
   1. Stratified multi-label split (skmultilearn) instead of random split
      → guarantees rare classes (deformation) appear in both train & val
   2. Per-class Otsu with class-aware inversion logic
@@ -54,15 +54,10 @@ INVERT_OTSU = {0: False, 1: False, 2: True, 3: True, 4: True}
 def _otsu_refine(box_region: np.ndarray, class_idx: int) -> np.ndarray:
     """
     Apply class-aware Otsu thresholding inside a bounding-box crop.
-
     Returns a float32 mask in [0,1] the same spatial size as box_region.
 
     Notes
     -----
-    - Corrosion (rust) is orange/brown = brighter than grey concrete,
-      so we do NOT invert the Otsu result for that class.
-    - For all other classes (cracks, spalling, deformation) the defect
-      is darker than the surrounding concrete, so we invert.
     - We blur slightly before thresholding to suppress JPEG compression
       noise that would otherwise create isolated single-pixel blobs.
     """
@@ -90,11 +85,8 @@ class CodebrimDataset(Dataset):
     Parameters
     ----------
     data_dir : str
-        Directory containing *.jpg / *.png images and matching *.xml files.
     file_basenames : list[str]
-        Subset of file base names (no extension) to include in this split.
     is_train : bool
-        If True, applies full augmentation pipeline.
     """
 
     def __init__(self, data_dir: str, file_basenames: list, is_train: bool = True):
@@ -425,7 +417,7 @@ def get_dataloaders(
 # ── Smoke test ─────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import sys
-    data_dir = sys.argv[1] if len(sys.argv) > 1 else "./data/codebrim"
+    data_dir = sys.argv[1] if len(sys.argv) > 1 else "../roboflow_data"
     print(f"Smoke-testing dataset pipeline on: {data_dir}")
 
     train_loader, val_loader, test_loader, cw = get_dataloaders(

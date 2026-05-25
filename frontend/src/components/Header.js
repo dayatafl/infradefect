@@ -14,13 +14,13 @@ export default function Header({ status, loading }) {
   const isModel = mode === 'model';
 
   return (
-    <header style={styles.header}>
+    <header style={styles.header} className="app-header">
       {/* Scanline effect */}
       <div style={styles.scanline} />
 
-      <div style={styles.inner}>
+      <div style={styles.inner} className="header-inner">
         {/* Logo */}
-        <div style={styles.logo}>
+        <div style={styles.logo} className="header-logo">
           <div style={styles.logoMark}>
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
               <rect x="1" y="1" width="26" height="26" rx="2" stroke="#f5a623" strokeWidth="1.5"/>
@@ -36,7 +36,7 @@ export default function Header({ status, loading }) {
         </div>
 
         {/* Legend */}
-        <div style={styles.legend}>
+        <div style={styles.legend} className="header-legend">
           {Object.entries(CLASS_META).map(([key, { hex, label }]) => (
             <div key={key} style={styles.legendItem}>
               <div style={{ ...styles.legendDot, background: hex }} />
@@ -46,7 +46,7 @@ export default function Header({ status, loading }) {
         </div>
 
         {/* Status */}
-        <div style={styles.statusBlock}>
+        <div style={styles.statusBlock} className="header-status">
           {loading ? (
             <span style={styles.statusDim}>CONNECTING...</span>
           ) : (

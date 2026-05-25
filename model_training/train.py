@@ -2,22 +2,20 @@
 train.py — Full training pipeline for CODEBRIM defect segmentation
 
 Usage
------
-    python train.py --data_dir ./data/codebrim --batch_size 4
-    python train.py --data_dir ./data/codebrim --resume ./checkpoints/last.pth
+    python train.py --batch_size 4
+    python train.py --resume ./checkpoints/last.pth
 
-What this script does vs gem/train.py
---------------------------------------
-  gem/train.py                          This script
-  ─────────────────────────────         ──────────────────────────────────────
-  val loss only for checkpointing  →    val mIoU (task metric) for checkpoint
-  no per-class metrics             →    per-class IoU + F1 every epoch
-  no resume support                →    full resume from last.pth
-  hardcoded pos_weight [3,5,5,6]   →    data-driven pos_weight from frequencies
-  no gradient clipping             →    gradient clipping (max_norm=1.0)
-  no warmup LR schedule            →    linear warmup + cosine decay (S2)
-  saves state_dict only            →    saves full training state
-  prints loss only                 →    rich epoch summary table
+Key functions in train.py:
+    - Two-stage training: Stage 1 decoder warmup (encoder frozen), Stage 2 full fine-tuning
+    - Layer-wise learning rates in Stage 2 (encoder 6e-5, decoder 6e-4)
+    - Linear warmup (first 10% of steps) + cosine decay LR schedule
+    - Gradient clipping (max_norm=1.0) to stabilize fine-tuning
+    - Checkpointing: saves best by val mIoU and last epoch (full training state for resume)
+    - Early stopping based on val mIoU with configurable patience
+    - Final evaluation on held-out test set with per-class metrics and JSON output
+    - Reproducibility: random seed control, deterministic data loading
+    - Rich console output: epoch summary with train/val loss, mIoU/mF1, per-class IoU/F1 table
+
 """
 
 from __future__ import annotations
@@ -123,7 +121,7 @@ class LinearWarmupCosineScheduler(torch.optim.lr_scheduler._LRScheduler):
 def print_epoch_summary(stage: str, epoch: int, total_epochs: int,
                         train_loss: float, val_loss: float,
                         metrics: dict, elapsed: float, is_best: bool):
-    tag = "★ BEST" if is_best else ""
+    tag = "BEST" if is_best else ""
     print(f"\n{'─'*70}")
     print(f"  {stage} | Epoch {epoch:>3}/{total_epochs}  ({elapsed:.0f}s)  {tag}")
     print(f"  Train loss: {train_loss:.4f}   Val loss: {val_loss:.4f}")

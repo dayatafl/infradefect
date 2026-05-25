@@ -21,9 +21,9 @@ export default function ResultPanel({ result, error }) {
 
   if (error) {
     return (
-      <div style={styles.wrapper}>
+      <div style={styles.wrapper} className="result-wrapper">
         <div style={styles.label}>ANALYSIS RESULT</div>
-        <div style={styles.errorBox}>
+        <div style={styles.errorBox} className="error-box">
           <div style={styles.errorIcon}>⚠</div>
           <div style={styles.errorText}>{error}</div>
         </div>
@@ -33,9 +33,9 @@ export default function ResultPanel({ result, error }) {
 
   if (!result) {
     return (
-      <div style={styles.wrapper}>
+      <div style={styles.wrapper} className="result-wrapper">
         <div style={styles.label}>ANALYSIS RESULT</div>
-        <div style={styles.emptyBox}>
+        <div style={styles.emptyBox} className="empty-box">
           <div style={styles.emptyGrid}>
             {[...Array(12)].map((_, i) => (
               <div key={i} style={{ ...styles.emptyCell,
@@ -59,8 +59,8 @@ export default function ResultPanel({ result, error }) {
       <div style={styles.label}>ANALYSIS RESULT</div>
 
       {/* Image viewer */}
-      <div style={styles.imageCard}>
-        <div style={styles.imageToolbar}>
+      <div style={styles.imageCard} className="image-card">
+        <div style={styles.imageToolbar} className="image-toolbar">
           <div style={styles.jobId}>
             <span style={styles.dimText}>JOB</span>
             <span style={styles.monoText}>{job_id}</span>
@@ -85,7 +85,7 @@ export default function ResultPanel({ result, error }) {
       </div>
 
       {/* Stats grid */}
-      <div style={styles.statsGrid}>
+      <div style={styles.statsGrid} className="stats-grid">
         {Object.entries(class_stats).map(([name, stat]) => {
           const meta = CLASS_META[name] || { hex: '#888', label: name };
           const pct = stat.percentage;
@@ -121,7 +121,7 @@ export default function ResultPanel({ result, error }) {
       </div>
 
       {/* Summary footer */}
-      <div style={styles.footer}>
+      <div style={styles.footer} className="result-footer">
         <div style={styles.footerItem}>
           <span style={styles.dimText}>INFERENCE</span>
           <span style={styles.monoText}>{inference_ms}ms</span>

@@ -14,12 +14,12 @@ export default function App() {
   }, [predict, reset]);
 
   return (
-    <div style={styles.app}>
+    <div style={styles.app} className="app-container">
       <Header status={status} loading={healthLoading} />
 
-      <main style={styles.main}>
+      <main style={styles.main} className="app-main">
         {/* Top metrics bar */}
-        <div style={styles.metricsBar}>
+        <div style={styles.metricsBar} className="metrics-bar">
           <MetricChip label="MODEL" value="SegFormer-B2" />
           <MetricChip label="BACKBONE" value="MiT-B2" />
           <MetricChip label="INPUT" value="512 × 512" />
@@ -35,12 +35,12 @@ export default function App() {
         </div>
 
         {/* Main workspace */}
-        <div style={styles.workspace}>
-          <div style={styles.inputCol}>
+        <div style={styles.workspace} className="workspace">
+          <div style={styles.inputCol} className="input-col">
             <DropZone onFile={handleFile} loading={loading} />
 
             {/* Instructions */}
-            <div style={styles.instructions}>
+            <div style={styles.instructions} className="instructions-box">
               <div style={styles.instrTitle}>HOW TO USE</div>
               <div style={styles.instrStep}>
                 <span style={styles.instrNum}>01</span>
@@ -64,7 +64,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer style={styles.footer}>
+      <footer style={styles.footer} className="app-footer">
         <span>INFRADEFECT — SegFormer-B2 fine-tuned on CODEBRIM</span>
         <span style={styles.footerSep}>·</span>
         <span>

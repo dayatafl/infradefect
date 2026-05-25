@@ -1,19 +1,15 @@
 """
 model.py — SegFormer-B2 for CODEBRIM multi-label defect segmentation
 
-Keeps gem's correct decisions:
+Key functions in model.py:
   - HuggingFace pretrained weights (nvidia/mit-b2)
   - Multi-label sigmoid output (not softmax)
   - BCE + Dice composite loss
+  - Data-driven class weights for imbalance
+  - Boundary loss term to improve crack edge sharpness
+  - Loss weights are configurable (bce_w, dice_w, boundary_w)
+  - Checkpoint save and EarlyStopping class for training control
 
-Fixes and upgrades:
-  1. pos_weight is now DATA-DRIVEN (passed in from dataset.py frequencies)
-     instead of hardcoded [3, 5, 5, 6]
-  2. Boundary loss term added — improves crack edge sharpness
-  3. Loss weights are configurable (bce_w, dice_w, boundary_w)
-  4. Checkpoint save includes full training state (epoch, metrics, config)
-     so training can be resumed
-  5. EarlyStopping class extracted here for reuse
 """
 
 from __future__ import annotations
@@ -71,9 +67,6 @@ class BoundaryLoss(nn.Module):
 
     Computes a distance-weighted BCE where pixels close to mask boundaries
     carry higher weight. This significantly improves crack edge sharpness.
-
-    Reference: Kervadec et al. "Boundary loss for highly unbalanced
-    segmentation" (MIDL 2019) — simplified version without full DT.
     """
 
     def __init__(self, kernel_size: int = 5):

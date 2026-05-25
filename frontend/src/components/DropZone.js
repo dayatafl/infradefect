@@ -22,7 +22,7 @@ export default function DropZone({ onFile, loading }) {
   });
 
   return (
-    <div style={styles.wrapper}>
+    <div style={styles.wrapper} className="dropzone-wrapper">
       <div style={styles.label}>INPUT IMAGE</div>
       <div
         {...getRootProps()}
@@ -31,6 +31,7 @@ export default function DropZone({ onFile, loading }) {
           ...(dragActive ? styles.zoneActive : {}),
           ...(loading ? styles.zoneDisabled : {}),
         }}
+        className="dropzone-area"
       >
         <input {...getInputProps()} />
 
